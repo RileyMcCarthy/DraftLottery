@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/DraftLottery/static/css/main.08bb5ae8.chunk.css",
+    "main.js": "/DraftLottery/static/js/main.965edc7f.chunk.js",
+    "main.js.map": "/DraftLottery/static/js/main.965edc7f.chunk.js.map",
+    "runtime-main.js": "/DraftLottery/static/js/runtime-main.dfa1c494.js",
+    "runtime-main.js.map": "/DraftLottery/static/js/runtime-main.dfa1c494.js.map",
+    "static/js/2.83d0252b.chunk.js": "/DraftLottery/static/js/2.83d0252b.chunk.js",
+    "static/js/2.83d0252b.chunk.js.map": "/DraftLottery/static/js/2.83d0252b.chunk.js.map",
+    "static/js/3.5931abf0.chunk.js": "/DraftLottery/static/js/3.5931abf0.chunk.js",
+    "static/js/3.5931abf0.chunk.js.map": "/DraftLottery/static/js/3.5931abf0.chunk.js.map",
+    "index.html": "/DraftLottery/index.html",
+    "static/css/main.08bb5ae8.chunk.css.map": "/DraftLottery/static/css/main.08bb5ae8.chunk.css.map",
+    "static/js/2.83d0252b.chunk.js.LICENSE.txt": "/DraftLottery/static/js/2.83d0252b.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dfa1c494.js",
+    "static/js/2.83d0252b.chunk.js",
+    "static/css/main.08bb5ae8.chunk.css",
+    "static/js/main.965edc7f.chunk.js"
+  ]
+}
