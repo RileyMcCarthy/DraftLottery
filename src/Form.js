@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 function Form() {
+  const [errors, setErrors] = useState({ teamCountError: false });
+  const [teamErrors, SetTeamErrors] = useState([]);
   const [page, setPage] = useState(0);
   const [teamCount, SetTeamCount] = useState(0);
   const [teamInfo, SetTeamInfo] = useState([]);
   const [draftStandings, SetDraftStandings] = useState([]);
-  const [currPick, SetCurrPick] = useState(1);
+  const [currPick, SetCurrPick] = useState(4);
   const [draftTable, SetDraftTable] = useState([]);
 
   const HandleBegin = () => {
     let tempArray = [];
+    if (teamCount < 4) {
+      setErrors({ teamCountError: true });
+      return;
+    }
+    let tempTeamErrors = [];
     for (let i = 0; i < teamCount; i++) {
       tempArray.push({
         id: i + 1,
@@ -18,7 +25,13 @@ function Form() {
         image: "",
         weight: 0,
       });
+      tempTeamErrors.push({
+        nameError: false,
+        percentageError: false,
+        logoError: false,
+      });
     }
+    SetTeamErrors(tempTeamErrors);
     SetTeamInfo(tempArray);
     setPage(1);
     console.log("begin!");
@@ -35,6 +48,9 @@ function Form() {
     let tempArray = [...teamInfo];
     let team = { ...tempArray[index] };
     team.weight = parseInt(newWeight);
+    if (isNaN(team.weight)) {
+      team.weight = 0;
+    }
     tempArray[index] = team;
     SetTeamInfo(tempArray);
     console.log(newWeight);
@@ -64,6 +80,31 @@ function Form() {
     //do this for first 4 picks then rest is decided by original weight
     let tempTeamInfo = [...teamInfo];
     let tempStandings = [];
+    let hasError = false;
+
+    let tempTeamErrors = [...teamErrors];
+    for (let i = 0; i < teamCount; i++) {
+      let tempTeam = { ...teamErrors[i] };
+
+      if (teamInfo[i].name == "") {
+        tempTeam.nameError = true;
+        hasError = true;
+      } else {
+        tempTeam.nameError = false;
+      }
+      if (teamInfo[i].weight > 100 || teamInfo[i] < 0) {
+        tempTeam.percentageError = true;
+        hasError = true;
+      } else {
+        tempTeam.percentageError = false;
+      }
+      tempTeamErrors[i] = tempTeam;
+    }
+    SetTeamErrors(tempTeamErrors);
+    console.log(tempTeamErrors);
+    if (hasError) {
+      return;
+    }
     for (let i = 0; i < 3; i++) {
       let choice = parseInt(rwc(tempTeamInfo));
       tempStandings.push({
@@ -105,10 +146,16 @@ function Form() {
       image: teamInfo[draftStandings[currPick - 1].id - 1].image,
     });
     SetDraftTable(tempDraftTable);
-    if (currPick == teamInfo.length) {
+    if (currPick == 1) {
       //show final standings
+      tempDraftTable.push({
+        standing: draftStandings[currPick].standing,
+        name: teamInfo[draftStandings[currPick].id - 1].name,
+        image: teamInfo[draftStandings[currPick].id - 1].image,
+      });
+      setPage(4);
     } else {
-      SetCurrPick(currPick + 1);
+      SetCurrPick(currPick - 1);
     }
   };
 
@@ -128,6 +175,14 @@ function Form() {
             aria-describedby="basic-addon3"
             onChange={(event) => SetTeamCount(event.target.value)}
           ></input>
+        </div>
+        <div className="row">
+          <label
+            style={{ visibility: errors.teamCountError ? "visible" : "hidden" }}
+            className="text-danger pl-3"
+          >
+            Please enter a number greater than four
+          </label>
         </div>
         <div className="row">
           <div className="col"></div>
@@ -154,7 +209,7 @@ function Form() {
   } else if (page === 1) {
     console.log(teamCount);
     return (
-      <div className="card mb-3 p-3 border container">
+      <div className="card mb-3 p-4 border container">
         {teamInfo.map((team) => (
           <motion.div
             key={team.id}
@@ -185,6 +240,19 @@ function Form() {
                       }
                     ></input>
                   </div>
+                  <div className="row">
+                    <p
+                      style={{
+                        visibility: teamErrors[team.id - 1].nameError
+                          ? "visible"
+                          : "hidden",
+                      }}
+                      className="text-danger text-center"
+                    >
+                      Please enter valid team <br />
+                      name
+                    </p>
+                  </div>
                 </div>
                 <div className="col">
                   <div className="row">
@@ -199,6 +267,18 @@ function Form() {
                         HandleWeight(event.target.value, team.id - 1)
                       }
                     ></input>
+                  </div>
+                  <div className="row">
+                    <label
+                      style={{
+                        visibility: teamErrors[team.id - 1].percentageError
+                          ? "visible"
+                          : "hidden",
+                      }}
+                      className="text-danger"
+                    >
+                      Please enter a number between 0-100
+                    </label>
                   </div>
                 </div>
                 <div className="col">
@@ -260,20 +340,6 @@ function Form() {
       </div>
     );
   } else if (page === 3) {
-    console.log(draftStandings);
-    console.log(teamInfo);
-    return (
-      <div className="card mb-3 p-3 border container">
-        <button
-          type="button"
-          className="btn btn-primary mt-3"
-          onClick={() => setPage(4)}
-        >
-          Show Results
-        </button>
-      </div>
-    );
-  } else if (page === 4) {
     const draftCardVariants = {
       hidden: {
         opacity: 0,
@@ -307,7 +373,7 @@ function Form() {
                 variants={draftCardVariants}
               >
                 <img
-                  className="image-thumnail p-2"
+                  className="image-thumnail img-responsive p-2"
                   src={teamInfo[draftStandings[currPick - 1].id - 1].image}
                 ></img>
                 <div className="card-body">
@@ -339,7 +405,9 @@ function Form() {
                       scale: 1,
                     }}
                     transition={{ duration: 0.5 }}
-                    exit="hidden"
+                    exit={{
+                      opacity: 0,
+                    }}
                     key={draftTeam.standing}
                   >
                     <th scope="row">
@@ -366,8 +434,58 @@ function Form() {
           className="btn btn-primary mt-3"
           onClick={() => HandleNextPick()}
         >
-          Next
+          {currPick == 1 ? "Final Standings" : "Next"}
         </button>
+      </div>
+    );
+  } else if (page == 4) {
+    console.log(draftStandings);
+    console.log(teamInfo);
+    return (
+      <div className="card mb-3 p-3 border container-fluid text-center">
+        <div className="row"></div>
+        <div className="col">
+          <table className="table">
+            <thead className="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Logo</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {draftStandings.map((draftTeam) => (
+                <motion.tr
+                  initial={{
+                    opacity: 0,
+                    scale: 0.6,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                  }}
+                  transition={{ duration: 0.5 }}
+                  exit="hidden"
+                  key={teamInfo[draftTeam.id - 1].id}
+                >
+                  <th scope="row">
+                    <h1>{draftTeam.standing}</h1>
+                  </th>
+                  <td className="w-25">
+                    <img
+                      className="img-fluid image-thumnail w-25"
+                      src={teamInfo[draftTeam.id - 1].image}
+                    ></img>
+                  </td>
+                  <td>
+                    <h2>{teamInfo[draftTeam.id - 1].name}</h2>
+                  </td>
+                  <td></td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
