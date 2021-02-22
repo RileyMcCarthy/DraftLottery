@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/DraftLottery/static/css/main.08bb5ae8.chunk.css",
-    "main.js": "/DraftLottery/static/js/main.1f9bf42c.chunk.js",
-    "main.js.map": "/DraftLottery/static/js/main.1f9bf42c.chunk.js.map",
+    "main.js": "/DraftLottery/static/js/main.dbe15f40.chunk.js",
+    "main.js.map": "/DraftLottery/static/js/main.dbe15f40.chunk.js.map",
     "runtime-main.js": "/DraftLottery/static/js/runtime-main.dfa1c494.js",
     "runtime-main.js.map": "/DraftLottery/static/js/runtime-main.dfa1c494.js.map",
     "static/js/2.e26f6828.chunk.js": "/DraftLottery/static/js/2.e26f6828.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.dfa1c494.js",
     "static/js/2.e26f6828.chunk.js",
     "static/css/main.08bb5ae8.chunk.css",
-    "static/js/main.1f9bf42c.chunk.js"
+    "static/js/main.dbe15f40.chunk.js"
   ]
 }
